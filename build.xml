@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project default="jar" name="web-framework" basedir=".">
+	<property name="lib.home" value="lib" />
+	<property name="src.home" value="src" />
+	<property name="classes.home" value="bin" />
+	<property name="dist.home" value="dist" />
+	<property name="version" value="1.0.0" />
+	<property name="zip.file.name" value="mx_japn_server" />
+	<property name="ewhine_pkg" value="ewhine_pkg" />
+	
+
+
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
+		base.classpath 设置编译的java的类 
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
+	-->
+	<path id="base.classpath">
+		<fileset dir="${lib.home}">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+	<path id="build.classpath">
+		<fileset dir="${classes.home}">
+			<include name="**/*.class" />
+		</fileset>
+	</path>
+
+
+	<!-- 初始化的具体的目录信息 -->
+	<target name="init" description="初始化代码">
+		<mkdir dir="${classes.home}" />
+		<mkdir dir="${dist.home}" />
+	</target>
+
+	<target name="clean" description="清除目录">
+		<delete dir="${classes.home}" failonerror="false" />
+	</target>
+
+
+
+	<target name="all" description="整体的操作" depends="clean,init,javac,jar">
+	</target>
+
+
+	<target name="javac" description="javac 编译java程序">
+		<copy todir="${classes.home}" overwrite="true" flatten="false">
+
+			<fileset dir="${src.home}">
+
+				<!-- include name="META-INF\service.xml" /-->
+				<include name="logback.xml" />
+
+			</fileset>
+		</copy>
+		<javac srcdir="${src.home}" destdir="${classes.home}" deprecation="on" debug="true" encoding="UTF-8" includeantruntime="false" source="1.8" target="1.8">
+			<classpath refid="base.classpath" />
+			<classpath refid="build.classpath" />
+		</javac>
+		
+	</target>
+
+	<target name="jar" description="创建jar的文件" depends="clean,init,javac">
+		<jar basedir="${classes.home}" jarfile="${ant.project.name}-${version}.jar">
+			<manifest>
+				<attribute name="Built-By" value="minxing" />
+				<attribute name="Manifest-Version" value="1.2" />
+				<attribute name="Created-By" value="minxing" />
+				<attribute name="Build-Version" value="${buildVersion}" />
+			</manifest>
+		</jar>
+		
+	</target>
+
+
+
+
+
+
+
+	<target name="version">
+		<tstamp>
+			<format property="current.time" pattern="yyyy-MM-dd HH:mm:ss" />
+		</tstamp>
+		<echo file="version.txt" append="false">Version : ${buildVersion}
+Date :${current.time}
+		</echo>
+	</target>
+
+	<target name="onejar" description="make one big jar" depends="jar">
+		<jar destfile="web-rest-server.jar">
+
+			<!--		
+			<zipfileset src="lib/akka-actor_2.11-2.4.11.jar" includes="**/*.class **/*.conf" />
+			<zipfileset src="lib/com.dehuinet.activerecord.jar" includes="**/*.class" />
+			<zipfileset src="lib/config-1.2.1.jar" includes="**/*.class" />
+			<zipfileset src="lib/fst-2.47.jar" includes="**/*.class" />
+			<zipfileset src="lib/jackson-core-2.6.5.jar" includes="**/*.class" />
+			<zipfileset src="lib/jackson-databind-2.6.5.jar" includes="**/*.class" />
+			<zipfileset src="lib/jedis-2.8.2.jar" includes="**/*.class" />
+
+			<zipfileset src="lib/jetty-http-9.3.6.v20151106.jar" includes="**/*.class" />
+			<zipfileset src="lib/jetty-io-9.3.6.v20151106.jar" includes="**/*.class" />
+			<zipfileset src="lib/jetty-server-9.3.6.v20151106.jar" includes="**/*.class" />
+			<zipfileset src="lib/jetty-servlet-9.3.6.v20151106.jar" includes="**/*.class" />
+			<zipfileset src="lib/jetty-util-9.3.6.v20151106.jar" includes="**/*.class" />
+
+			<zipfileset src="lib/logback-access-1.1.3.jar" includes="**/*.class" />
+			<zipfileset src="lib/logback-classic-1.1.3.jar" includes="**/*.class" />
+			<zipfileset src="lib/logback-core-1.1.3.jar" includes="**/*.class" />
+			<zipfileset src="lib/mysql-connector-java-5.1.34.jar" includes="**/*.class" />
+			<zipfileset src="lib/objenesis-2.4.jar" includes="**/*.class" />
+			<zipfileset src="lib/scala-library-2.11.8.jar" includes="**/*.class" />
+			<zipfileset src="lib/slf4j-api-1.7.13.jar" includes="**/*.class" />
+			<zipfileset src="lib/snakeyaml-1.17.jar" includes="**/*.class" />
+			<zipfileset src="lib/spark-core-2.5.jar" includes="**/*.class" />
+			<zipfileset src="lib/spymemcached-2.12.1.jar" includes="**/*.class" />
+			
+			<zipfileset src="lib/velocity-1.7-dep.jar" includes="**/*.class" />
+			<zipfileset src="lib/velocity-1.7.jar" includes="**/*.class" />
+			<zipfileset src="lib/websocket-server-9.3.6.v20151106.jar" includes="**/*.class" />
+		
+			<zipfileset src="lib/oss-1.0.0.jar" includes="**/*.class" />
+-->
+
+			<zipgroupfileset dir="${lib.home}" includes="*.jar" />
+			
+			<manifest>
+				<attribute name="Built-By" value="minxing" />
+				<attribute name="Manifest-Version" value="1.2" />
+				<attribute name="Created-By" value="minxing" />
+				<attribute name="Build-Version" value="${buildVersion}" />
+			</manifest>
+			<!-- <zipgroupfileset dir="." includes="server.jar" /> -->
+		</jar>
+	</target>
+
+
+</project>
+
